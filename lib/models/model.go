@@ -3,49 +3,56 @@ package model
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/trm109/tdx-care-client/lib/views"
 )
 
-type state int
+//type state int
 
-const (
-	login state = iota
-	home
-)
+//const (
+//	login state = iota
+//	home
+//)
 
-type mainModel struct {
-	state  state
-	token  string // api token
-	cursor int
+type model struct {
+	//state state
+	view  tea.Model
+	token string // api token
 }
 
 func Construct() tea.Model {
 	// Initialize the main model
-	return mainModel{
-		state:  login,
-		token:  "",
-		cursor: 0,
+	return model{
+		view:  views.ConstructLogin(), // Default view
+		token: "",
 	}
 }
 
-func (m mainModel) Init() tea.Cmd {
+func (m model) Init() tea.Cmd {
 	// returns the current view's init function
 	return nil
 }
 
-func (m mainModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmds []tea.Cmd
 	// returns the current view's update function
-	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
-			return m, tea.Quit
-		}
-	}
+	//switch msg := msg.(type) {
+	//case tea.KeyMsg:
+	//	switch msg.String() {
+	//	case "ctrl+c", "q":
+	//		return m, tea.Quit
+	//	}
+	//}
+	m.view, cmd = m.view.Update(msg)
+	cmds = append(cmds, cmd)
 
-	return m, nil
+	//cmds = append(cmds, cmd)
+	//m.setViewportContent() // refresh the content on every Update call
+	//return m, tea.Batch(cmds...)
+	return m, tea.Batch(cmds...)
 }
 
-func (m mainModel) View() string {
+func (m model) View() string {
 	// returns the current view's view function
-	return "ERR"
+	// Can wrap this view in a lipgloss formatter
+	return m.view.View()
 }

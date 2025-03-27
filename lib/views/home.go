@@ -4,6 +4,8 @@ package views
 import (
 	"fmt"
 
+	"github.com/charmbracelet/bubbles/textinput"
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -43,7 +45,7 @@ func (m homeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	}
-	return m, nil
+	return m, textinput.Blink
 }
 
 func (m homeModel) View() string {
